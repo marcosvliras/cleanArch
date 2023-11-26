@@ -1,0 +1,41 @@
+repos:
+  - repo: local
+    hooks:
+    - id: black
+      name: black
+      entry: python3 -m black . -l79
+      language: system
+      stages: [commit]
+      types: [python]
+  - repo: local
+    hooks:
+    - id: pylint
+      name: pylint
+      entry: pylint
+      language: system
+      stages: [commit]
+      types: [python]
+      args:
+        [
+          "-rn", #only display messages
+          "-sn", #don`t display the score
+          "--rcfile=.pylintrc", #link to your config file
+          "--load-plugins=pylint.extensions.docparams", # load an extension
+        ]
+  - repo: local
+    hooks:
+      - id: pytest
+        name: pytest
+        language: system
+        entry: python3 -m pytest 
+        always_run: true
+        pass_filenames: false
+        stages: [commit]
+  - repo: local
+    hooks:
+      - id: requirements
+        name: requirements
+        language: system
+        entry: bash -c python3 -m pip freeze > requirements.txt; git add requirements.txt
+        stages: [commit]
+        pass_filenames: false

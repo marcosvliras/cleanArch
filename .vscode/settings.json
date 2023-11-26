@@ -1,0 +1,13 @@
+{
+  "files.exclude": {
+    "**/*.pyc*": {
+      "when": "$(basename).py"
+    },
+    "**/__pycache__": true,
+    "**/.pytest_cache": true
+  },
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "ms-python.black-formatter",
+  "python.linting.enabled": true,
+  "python.linting.pylintEnabled": true,
+}
