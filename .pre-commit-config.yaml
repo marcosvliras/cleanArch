@@ -12,10 +12,11 @@ repos:
     hooks:
     - id: black
       name: black
-      entry: python3 -m black . -l79
+      entry: make lint
       language: system
       stages: [commit]
       types: [python]
+      always_run: true
   - repo: local
     hooks:
     - id: isort
@@ -24,28 +25,22 @@ repos:
       language: system
       stages: [commit]
       types: [python]
+      always_run: true
   - repo: local
     hooks:
     - id: pylint
       name: pylint
-      entry: pylint
+      entry: make lint-check
       language: system
       stages: [commit]
       types: [python]
-      args:
-        [
-          "-rn", #only display messages
-          "-sn", #don`t display the score
-          "--rcfile=.pylintrc", #link to your config file
-          "--load-plugins=pylint.extensions.docparams", # load an extension
-        ]
+      always_run: true
   - repo: local
     hooks:
       - id: pytest
         name: pytest
         language: system
-        entry: python3 -m pytest 
+        entry: make test
         always_run: true
         pass_filenames: false
         stages: [commit]
-
