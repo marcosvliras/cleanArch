@@ -1,6 +1,5 @@
 .DS_Store
-database.db
-teste.db
+**.db
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
