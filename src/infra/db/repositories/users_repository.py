@@ -1,18 +1,21 @@
-from typing import Union
+from typing import List, Union
 
 from sqlalchemy.orm.session import Session
 
-from src.infra.db.entities import User
+from src.data.interfaces.users_repository import UserRepositoryInterface
+from src.infra.db.entities import User as UserEntity
 
 
-class UserRepository:
+class UserRepository(UserRepositoryInterface):
     def __init__(self, session: Session) -> None:
         self.__session = session
 
-    def insert_user(self, first_name: str, last_name: str, age: int) -> User:
+    def insert_user(
+        self, first_name: str, last_name: str, age: int
+    ) -> UserEntity:
         with self.__session() as session:
             try:
-                new_user = User(
+                new_user = UserEntity(
                     first_name=first_name, last_name=last_name, age=age
                 )
                 session.add(new_user)
@@ -22,10 +25,15 @@ class UserRepository:
                 self.__session.rollback()
                 raise e
 
-    def select_user_by_id(self, user_id: int) -> Union[User, None]:
+    def select_user(self, first_name: str) -> Union[List[UserEntity], None]:
         with self.__session() as session:
             try:
-                return session.query(User).filter(User.id == user_id).first()
+                users = (
+                    session.query(UserEntity)
+                    .filter(UserEntity.first_name == first_name)
+                    .all()
+                )
+                return users
             except Exception as e:
                 self.__session.rollback()
                 raise e
@@ -33,7 +41,9 @@ class UserRepository:
     def delete_user(self, user_id: int) -> None:
         with self.__session() as session:
             try:
-                session.query(User).filter(User.id == user_id).delete()
+                session.query(UserEntity).filter(
+                    UserEntity.id == user_id
+                ).delete()
                 session.commit()
             except Exception as e:
                 self.__session.rollback()
