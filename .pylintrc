@@ -11,6 +11,7 @@ disable=
       W0621, #redefined-outer-name
       W0622, #redefined-builtin
       W0237, #useless-super-delegation
+      W1309, #invalid-envvar-value
 
 # Analyse import fallback blocks. This can be used to support both Python 2 and
 # 3 compatible code, which means that the block might have code that exists
