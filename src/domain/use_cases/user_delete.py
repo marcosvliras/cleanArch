@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 from typing import Dict
 
 
-class UserFinderInterface(ABC):
+class UserDeleteInterface(ABC):
     @abstractmethod
-    def find(self) -> Dict:
+    def delete(self) -> Dict:
         pass

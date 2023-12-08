@@ -2,15 +2,12 @@ from typing import Dict, List
 
 from src.data.interfaces.users_repository import UserRepositoryInterface
 from src.domain.models.users import Users
-from src.domain.use_cases.user_finder import UserFinder as UserFinderInterface
+from src.domain.use_cases.user_finder import UserFinderInterface
 
 
 class UserFinder(UserFinderInterface):
     def __init__(self, user_repository: UserRepositoryInterface) -> None:
         self.__user_repository = user_repository
-
-    def create(self, first_name: str, last_name: str, age: int) -> Dict:
-        return self.__user_repository.insert_user(first_name, last_name, age)
 
     def find(self, first_name) -> Dict:
         self.__validate_name(first_name)
@@ -18,9 +15,6 @@ class UserFinder(UserFinderInterface):
         users = self.__search_user(first_name)
         response = self.__format_response(users)
         return response
-
-    def delete(self, user_id: int) -> None:
-        return self.__user_repository.delete_user(user_id)
 
     @classmethod
     def __validate_name(cls, first_name: str) -> None:

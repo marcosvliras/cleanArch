@@ -1,7 +1,7 @@
 import pytest
 from faker import Faker
 
-from src.data.use_cases import UserFinder
+from src.data.use_cases import UserRegister
 from src.infra.db.entities import User as UserEntity
 from src.infra.db.repositories.users_repository import UserRepository
 
@@ -27,41 +27,29 @@ def test_find_user(mocker, data):
         UserRepository(SessionLocalTestIntegration)
     )
 
-    user_mock = UserEntity(
+    mock_user_repository.insert_user.return_value = None
+    user_finder = UserRegister(mock_user_repository)
+
+    response = user_finder.create(
         first_name=data["name"], last_name=data["last_name"], age=data["age"]
     )
-    mock_user_repository.select_user.return_value = [user_mock]
-    user_finder = UserFinder(mock_user_repository)
 
-    response = user_finder.find(data["name"])
-
-    assert response["attributes"][0].first_name == data["name"]
-    assert response["attributes"][0].last_name == data["last_name"]
-    assert response["attributes"][0].age == data["age"]
+    assert response is None
 
 
-def test_find_user_with_invalid_first_name():
+def test_register_user_with_invalid_first_name():
     user_repository = UserRepository(SessionLocalTestIntegration)
-    user_finder = UserFinder(user_repository)
+    user_finder = UserRegister(user_repository)
     with pytest.raises(TypeError) as exc_info:
-        user_finder.find(first_name=9_090_983)
+        user_finder.create(first_name=9_090_983, last_name="Silva", age=25)
 
     assert str(exc_info.value) == "First name must be a string"
 
 
-def test_find_user_with_invalid_first_name_length():
+def test_register_user_with_invalid_first_name_length():
     user_repository = UserRepository(SessionLocalTestIntegration)
-    user_finder = UserFinder(user_repository)
+    user_register = UserRegister(user_repository)
     with pytest.raises(ValueError) as exc_info:
-        user_finder.find(first_name="a" * 19)
+        user_register.create(first_name="a" * 19, last_name="Silva", age=25)
 
     assert str(exc_info.value) == "First name must be less than 18 characters"
-
-
-def test_find_user_with_user_not_found():
-    user_repository = UserRepository(SessionLocalTestIntegration)
-    user_finder = UserFinder(user_repository)
-    with pytest.raises(ValueError) as exc_info:
-        user_finder.find(first_name="JONH DOE")
-
-    assert str(exc_info.value) == "User not found"
