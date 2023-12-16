@@ -38,9 +38,9 @@ def test_find_user(data):
     user_repository = UserRepository(SessionLocalTestIntegration)
     user_finder = UserFinder(user_repository)
     response = user_finder.find(data["name"])
-    assert response["attributes"][0].first_name == data["name"]
-    assert response["attributes"][0].last_name == data["last_name"]
-    assert response["attributes"][0].age == data["age"]
+    assert response["attributes"]["first_name"] == data["name"]
+    assert response["attributes"]["last_name"] == data["last_name"]
+    assert response["attributes"]["age"] == data["age"]
 
 
 def test_delete_user():
